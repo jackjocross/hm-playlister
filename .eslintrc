@@ -1,0 +1,29 @@
+{
+  "parser": "babel-eslint",
+  "env": {
+    "node": true
+  },
+  "globals": {
+    "__DEV__"      : false,
+    "__PROD__"     : false,
+    "__DEBUG__"    : false,
+    "__DEBUG_NW__" : false
+  },
+  "ecmaFeatures": {
+    "arrowFunctions": true,
+    "blockBindings": true,
+    "forOf": true,
+    "modules": true,
+    "spread": true
+  },
+  "rules": {
+    // disable requiring trailing commas
+    "comma-dangle": 0,
+    // disable requiring capital letter for constructors
+    "new-cap": 1,
+    "no-console": 0,
+    // https://davidwalsh.name/for-and-against-let
+    // and "vars-on-top" is enforced
+    "no-var": 0
+  }
+}
