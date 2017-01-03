@@ -33,8 +33,7 @@ request.post(authOptions, (error, response, body) => {
     Promise.all([profileReq.json(), playlistsReq.json()]).then(([profile, playlists]) => {
       const playlist = playlists.items.filter(item => item.name === playlist_name)[0];
       if (playlist) {
-        fetch(`https://api.spotify.com/v1/users/${profile.id}/playlists/${playlist.id}/tracks`, Object.assign({}, options, { method: 'PUT' }))
-          .then(() => populate(playlist, profile, options));
+        populate(playlist, profile, options);
       } else {
         const createOpts = Object.assign({}, options, {
           method: 'POST',
@@ -78,7 +77,7 @@ function populate(playlist, profile, options) {
               const uris = matches.map(match => match.uri);
 
               const addOpts = Object.assign({}, options, {
-                method: 'POST',
+                method: 'PUT',
                 body: JSON.stringify({
                   uris
                 })
