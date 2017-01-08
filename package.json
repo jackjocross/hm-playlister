@@ -8,10 +8,10 @@
     "prebuild": "npm run lint && npm run clean",
     "build": "babel src --out-dir lib",
     "lint": "eslint --ignore-path .gitignore --ext .js src test",
-    "postinstall": "npm link"
+    "postinstall": "npm build"
   },
   "bin": {
-    "hypenow": "lib/index.js"
+    "hm": "lib/index.js"
   },
   "repository": {
     "type": "git",
@@ -22,7 +22,8 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "isomorphic-fetch": "^2.2.1"
+    "isomorphic-fetch": "^2.2.1",
+    "request": "^2.79.0"
   },
   "devDependencies": {
     "babel-cli": "^6.7.5",
