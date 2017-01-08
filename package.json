@@ -1,6 +1,6 @@
 {
   "name": "hm-weekly",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Last week's most blogged about tracks according to The Hype Machine (http://hypem.com/), exported to Spotify.",
   "main": "lib/index.js",
   "scripts": {
@@ -23,7 +23,8 @@
   "license": "MIT",
   "dependencies": {
     "isomorphic-fetch": "^2.2.1",
-    "request": "^2.79.0"
+    "request": "^2.79.0",
+    "yargs": "^6.6.0"
   },
   "devDependencies": {
     "babel-cli": "^6.7.5",

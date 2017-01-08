@@ -2,12 +2,12 @@
 
 import request from 'request';
 import fetch from 'isomorphic-fetch';
+import { argv } from 'yargs';
+
 import secrets from '../secrets.json';
 
 const { client_id, client_secret, refresh_token } = secrets;
 let { access_token } = secrets;
-
-const playlist_name = 'Hypem Weekly';
 
 const authOptions = {
   url: 'https://accounts.spotify.com/api/token',
@@ -31,14 +31,14 @@ request.post(authOptions, (error, response, body) => {
 
   Promise.all([profilePending, playlistsPending]).then(([profileReq, playlistsReq]) => {
     Promise.all([profileReq.json(), playlistsReq.json()]).then(([profile, playlists]) => {
-      const playlist = playlists.items.filter(item => item.name === playlist_name)[0];
+      const playlist = playlists.items.filter(item => item.name === argv.name)[0];
       if (playlist) {
         populate(playlist, profile, options);
       } else {
         const createOpts = Object.assign({}, options, {
           method: 'POST',
           body: JSON.stringify({
-            name: playlist_name
+            name: argv.name
           })
         });
         fetch(`https://api.spotify.com/v1/users/${profile.id}/playlists`, createOpts)
@@ -46,7 +46,7 @@ request.post(authOptions, (error, response, body) => {
             return response.json()
           })
           .then(newPlaylist => {
-            populate(newPlayist, profile, options)
+            populate(newPlaylist, profile, options)
           })
       }
     })
@@ -54,7 +54,7 @@ request.post(authOptions, (error, response, body) => {
 });
 
 function populate(playlist, profile, options) {
-  fetch('https://api.hypem.com/v2/popular?mode=lastweek&count=50').then(body => {
+  fetch(`https://api.hypem.com/v2/popular?mode=${argv.mode}&count=50`).then(body => {
     body.json().then(json => {
       const searchesPending = json.map(track => {
         const query = encodeURIComponent(`${track.artist} ${track.title}`);
