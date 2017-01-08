@@ -1,4 +1,4 @@
-hm-weekly
+hm-playlister
 ===============
 
-Last week's most blogged about tracks according to The Hype Machine (http://hypem.com/), exported to Spotify.
+Most blogged about tracks according to The Hype Machine (http://hypem.com/), exported to Spotify.

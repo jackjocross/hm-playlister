@@ -1,7 +1,7 @@
 {
-  "name": "hm-weekly",
-  "version": "0.0.2",
-  "description": "Last week's most blogged about tracks according to The Hype Machine (http://hypem.com/), exported to Spotify.",
+  "name": "hm-playlister",
+  "version": "0.0.1",
+  "description": "Most blogged about tracks according to The Hype Machine (http://hypem.com/), exported to Spotify.",
   "main": "lib/index.js",
   "scripts": {
     "clean": "rimraf lib",
