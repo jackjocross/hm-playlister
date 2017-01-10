@@ -59,7 +59,7 @@ function populate(playlist, profile, options) {
       const searchesPending = json.map(track => {
         const query = encodeURIComponent(`${track.artist} ${track.title}`);
 
-        return fetch(`https://api.spotify.com/v1/search?q=${query}&type=track`, options);
+        return fetch(`https://api.spotify.com/v1/search?q=${query}&type=track&limit=1`, options);
       });
 
       Promise.all(searchesPending).then(searches => {
@@ -67,7 +67,7 @@ function populate(playlist, profile, options) {
 
         Promise.all(resultsPending).then(results => {
           const tracksPending = results
-            .filter(result => result.tracks.total)
+            .filter(result => result.tracks && result.tracks.total)
             .map(result => fetch(result.tracks.items[0].href, options))
 
           Promise.all(tracksPending).then(tracks => {

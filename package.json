@@ -1,6 +1,6 @@
 {
   "name": "hm-playlister",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Most blogged about tracks according to The Hype Machine (http://hypem.com/), exported to Spotify.",
   "main": "lib/index.js",
   "scripts": {
