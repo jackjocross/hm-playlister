@@ -2,64 +2,86 @@
 
 import request from 'request';
 import fetch from 'isomorphic-fetch';
-import { argv } from 'yargs';
+import {argv} from 'yargs';
 
 import secrets from '../secrets.json';
 
-const { client_id, client_secret, refresh_token } = secrets;
-let { access_token } = secrets;
+const {client_id, client_secret, refresh_token} = secrets;
+let {access_token} = secrets;
 
 const authOptions = {
   url: 'https://accounts.spotify.com/api/token',
-  headers: { 'Authorization': 'Basic ' + (new Buffer(client_id + ':' + client_secret).toString('base64')) },
+  headers: {
+    Authorization: 'Basic ' +
+      new Buffer(client_id + ':' + client_secret).toString('base64'),
+  },
   form: {
     grant_type: 'refresh_token',
-    refresh_token
+    refresh_token,
   },
-  json: true
+  json: true,
 };
 
 request.post(authOptions, (error, response, body) => {
   access_token = body.access_token;
 
   const options = {
-    headers: { 'Authorization': 'Bearer ' + access_token },
+    headers: {Authorization: 'Bearer ' + access_token},
   };
 
   const profilePending = fetch('https://api.spotify.com/v1/me', options);
-  const playlistsPending = fetch('https://api.spotify.com/v1/me/playlists', options);
+  const playlistsPending = fetch(
+    'https://api.spotify.com/v1/me/playlists',
+    options,
+  );
 
-  Promise.all([profilePending, playlistsPending]).then(([profileReq, playlistsReq]) => {
-    Promise.all([profileReq.json(), playlistsReq.json()]).then(([profile, playlists]) => {
-      const playlist = playlists.items.filter(item => item.name === argv.name)[0];
+  Promise.all([
+    profilePending,
+    playlistsPending,
+  ]).then(([profileReq, playlistsReq]) => {
+    Promise.all([
+      profileReq.json(),
+      playlistsReq.json(),
+    ]).then(([profile, playlists]) => {
+      const playlist = playlists.items.filter(item => item.name === argv.name)[
+        0
+      ];
       if (playlist) {
         populate(playlist, profile, options);
       } else {
         const createOpts = Object.assign({}, options, {
           method: 'POST',
           body: JSON.stringify({
-            name: argv.name
-          })
+            name: argv.name,
+          }),
         });
-        fetch(`https://api.spotify.com/v1/users/${profile.id}/playlists`, createOpts)
+        fetch(
+          `https://api.spotify.com/v1/users/${profile.id}/playlists`,
+          createOpts,
+        )
           .then(response => {
-            return response.json()
+            return response.json();
           })
           .then(newPlaylist => {
-            populate(newPlaylist, profile, options)
-          })
+            populate(newPlaylist, profile, options);
+          });
       }
-    })
-  })
+    });
+  });
 });
 
 function populate(playlist, profile, options) {
-  fetch(`https://api.hypem.com/v2/popular?mode=${argv.mode}&count=50`).then(body => {
+  fetch(
+    `https://api.hypem.com/v2/popular?mode=${argv.mode}&count=50`,
+  ).then(body => {
     body.json().then(json => {
       const searchesPending = json.map(track => {
         const query = encodeURIComponent(`${track.artist} ${track.title}`);
 
-        return fetch(`https://api.spotify.com/v1/search?q=${query}&type=track&limit=1`, options);
+        return fetch(
+          `https://api.spotify.com/v1/search?q=${query}&type=track&limit=1`,
+          options,
+        );
       });
 
       Promise.all(searchesPending).then(searches => {
@@ -68,7 +90,7 @@ function populate(playlist, profile, options) {
         Promise.all(resultsPending).then(results => {
           const tracksPending = results
             .filter(result => result.tracks && result.tracks.total)
-            .map(result => fetch(result.tracks.items[0].href, options))
+            .map(result => fetch(result.tracks.items[0].href, options));
 
           Promise.all(tracksPending).then(tracks => {
             const matchesPending = tracks.map(track => track.json());
@@ -79,11 +101,14 @@ function populate(playlist, profile, options) {
               const addOpts = Object.assign({}, options, {
                 method: 'PUT',
                 body: JSON.stringify({
-                  uris
-                })
+                  uris,
+                }),
               });
 
-              fetch(`https://api.spotify.com/v1/users/${profile.id}/playlists/${playlist.id}/tracks`, addOpts)
+              fetch(
+                `https://api.spotify.com/v1/users/${profile.id}/playlists/${playlist.id}/tracks`,
+                addOpts,
+              );
             });
           });
         });
