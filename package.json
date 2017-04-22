@@ -1,9 +1,11 @@
 {
   "name": "hm-playlister",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Most blogged about tracks according to The Hype Machine (http://hypem.com/), exported to Spotify.",
-  "main": "lib/index.js",
-  "files": "lib",
+  "main": "lib",
+  "files": [
+    "lib"
+  ],
   "scripts": {
     "clean": "rimraf lib",
     "prebuild": "npm run lint && npm run clean",
