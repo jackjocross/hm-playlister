@@ -1,8 +1,9 @@
 {
   "name": "hm-playlister",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Most blogged about tracks according to The Hype Machine (http://hypem.com/), exported to Spotify.",
   "main": "lib/index.js",
+  "files": "lib",
   "scripts": {
     "clean": "rimraf lib",
     "prebuild": "npm run lint && npm run clean",
@@ -13,10 +14,7 @@
   "bin": {
     "hm": "lib/index.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/jjcross/hm-weekly"
-  },
+  "repository": "jjcross/hm-weekly",
   "contributors": [
     "Jack Cross <jackjocross@gmail.com>"
   ],
